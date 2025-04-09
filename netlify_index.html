@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🌍 AWSM.Travel – Around the World in 60 Minutes</title>
+  <meta name="description" content="A global rotation of live cam feeds, ambiance, and edge-tech rebellion. Welcome to WorldParty at AWSM.Travel.">
+  <meta property="og:title" content="AWSM.Travel – Around the World in 60 Minutes" />
+  <meta property="og:description" content="A global rotation of live cam feeds, ambiance, and edge-tech rebellion." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="serious_mumbo_logo.png" />
+  <meta property="og:url" content="https://awsm.travel" />
+  <style>
+    body {
+      margin: 0;
+      background: #000;
+      color: #0f0;
+      font-family: monospace;
+      overflow: hidden;
+    }
+    #videoFrame {
+      width: 100vw;
+      height: 100vh;
+      border: none;
+    }
+    #logo {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 140px;
+      opacity: 0.85;
+      z-index: 10;
+    }
+    #chiron {
+      position: absolute;
+      bottom: 20px;
+      width: 100%;
+      color: #0f0;
+      font-size: 1.2rem;
+      text-align: center;
+      z-index: 9;
+    }
+    #clickPrompt {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #888;
+      background: rgba(0, 0, 0, 0.8);
+      padding: 1rem 2rem;
+      border: 1px solid #333;
+      border-radius: 4px;
+      font-size: 1rem;
+      z-index: 20;
+    }
+  </style>
+</head>
+<body>
+  <div id="clickPrompt" onclick="startWorldParty()">▶ Click to Begin</div>
+  <img id="logo" src="serious_mumbo_logo.png" alt="Serious Mumbo Logo">
+  <iframe id="videoFrame" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+  <iframe width="0" height="0" src="https://www.youtube.com/embed/2bLJmKq2_Kw?autoplay=1&loop=1&playlist=2bLJmKq2_Kw" frameborder="0" allow="autoplay"></iframe>
+  <div id="chiron"></div>
+  <script>
+    let feeds = ['https://www.youtube.com/embed/DBWgFXSMr-8', 'https://www.youtube.com/embed/hb_nPVSnNqw', 'https://www.youtube.com/embed/jtvmwjzZY0c', 'https://www.youtube.com/embed/5uZa3-RMFos', 'https://www.youtube.com/embed/ph1vpnYIxJk', 'https://www.youtube.com/embed/8Et9fVZld7E', 'https://www.youtube.com/embed/r_Q8MsijWZI', 'https://www.youtube.com/embed/1EiC9bvVGnk'];
+    feeds.sort(() => Math.random() - 0.5);
+    let index = 0;
+    let player = document.getElementById('videoFrame');
+    let chironLines = ['Row row row your boat', 'Gently down the stream', 'Merrily merrily merrily merrily', 'Life is but a dream'];
+    let chiron = document.getElementById('chiron');
+    let i = 0;
+
+    function rotate() {
+      if (!feeds[index]) return;
+      player.src = feeds[index] + '&autoplay=1';
+      index = (index + 1) % feeds.length;
+    }
+
+    function scrollChiron() {
+      chiron.innerText = chironLines[i];
+      i = (i + 1) % chironLines.length;
+    }
+
+    function startWorldParty() {
+      document.getElementById('clickPrompt').style.display = 'none';
+      rotate();
+      setInterval(rotate, 30000);
+      scrollChiron();
+      setInterval(scrollChiron, 8000);
+    }
+  </script>
+</body>
+</html>
