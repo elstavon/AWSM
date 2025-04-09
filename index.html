@@ -62,8 +62,7 @@
   <iframe width="0" height="0" src="https://www.youtube.com/embed/2bLJmKq2_Kw?autoplay=1&loop=1&playlist=2bLJmKq2_Kw" frameborder="0" allow="autoplay"></iframe>
   <div id="chiron"></div>
   <script>
-    let feeds = ['https://www.youtube.com/embed/DBWgFXSMr-8', 'https://www.youtube.com/embed/hb_nPVSnNqw', 'https://www.youtube.com/embed/jtvmwjzZY0c', 'https://www.youtube.com/embed/5uZa3-RMFos', 'https://www.youtube.com/embed/ph1vpnYIxJk', 'https://www.youtube.com/embed/8Et9fVZld7E', 'https://www.youtube.com/embed/r_Q8MsijWZI', 'https://www.youtube.com/embed/1EiC9bvVGnk'];
-    feeds.sort(() => Math.random() - 0.5);
+    let feeds = [];
     let index = 0;
     let player = document.getElementById('videoFrame');
     let chironLines = ['Row row row your boat', 'Gently down the stream', 'Merrily merrily merrily merrily', 'Life is but a dream'];
@@ -71,7 +70,7 @@
     let i = 0;
 
     function rotate() {
-      if (!feeds[index]) return;
+      if (!feeds.length) return;
       player.src = feeds[index] + '&autoplay=1';
       index = (index + 1) % feeds.length;
     }
@@ -88,6 +87,14 @@
       scrollChiron();
       setInterval(scrollChiron, 8000);
     }
+
+    fetch('yt_feeds.json')
+      .then(res => res.json())
+      .then(data => {
+        feeds = data.sort(() => Math.random() - 0.5);
+        console.log('Loaded feeds:', feeds.length);
+      })
+      .catch(err => console.error('Failed to load feeds:', err));
   </script>
 </body>
 </html>
