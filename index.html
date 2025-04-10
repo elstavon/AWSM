@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AWSM.Travel – Around the World in 60 Minutes</title>
+  <title>AWSM.Travel – Updated Menu Layout</title>
   <style>
     body, html {
       margin: 0;
@@ -14,43 +14,7 @@
       overflow: hidden;
       color: #0f0;
     }
-    .splash {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background: #000;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      z-index: 20;
-      transition: opacity 1s ease;
-    }
-    .splash img {
-      max-width: 75%;
-      height: auto;
-      margin-bottom: 1rem;
-    }
-    .splash h2 {
-      font-size: 1.5rem;
-      color: salmon;
-      margin-top: 0;
-    }
-    .splash button {
-      margin-top: 2rem;
-      padding: 1rem 2rem;
-      font-size: 1rem;
-      background: rgba(0, 0, 0, 0.7);
-      border: 1px solid #0f0;
-      color: #0f0;
-      cursor: pointer;
-    }
-    #videoFrame {
-      width: 100vw;
-      height: 100vh;
-      border: none;
-    }
+
     #leftMenu {
       position: absolute;
       top: 50%;
@@ -61,14 +25,28 @@
       gap: 1rem;
       z-index: 15;
     }
+
     #leftMenu button {
       padding: 0.6rem 1.2rem;
       font-size: 1rem;
       background: rgba(0,0,0,0.6);
       color: #0f0;
       border: 1px solid #0f0;
+      border-radius: 10px;
       cursor: pointer;
+      transition: all 0.2s ease;
     }
+
+    #leftMenu button:hover {
+      background-color: rgba(0, 255, 0, 0.2);
+    }
+
+    #videoFrame {
+      width: 100vw;
+      height: 100vh;
+      border: none;
+    }
+
     #chiron {
       position: absolute;
       bottom: 20px;
@@ -82,71 +60,42 @@
 </head>
 <body>
 
-  <div class="splash" id="splash">
-    <img src="img/ASWMsplashlogo.png" alt="AWSM Splash Logo" />
-    <h2>Around the World in Sixty Minutes</h2>
-    <button onclick="startWorldParty()">Enter</button>
-  </div>
-
   <div id="leftMenu">
-    <button onclick="startWorldParty()">▶ Start</button>
-    <button onclick="toggleStick()">🧷 Stick</button>
-    <button onclick="pauseRotation()">⏸ Pause</button>
-    <button onclick="alert('A project of Stephen. Supported by Nevo.')">ℹ️ About</button>
-    <button onclick="window.location='mailto:stephen@seriousmumbo.com'">✉️ Contact</button>
+    <button onclick="startWorldParty()">▶ START</button>
+    <button onclick="toggleStick()" id="stickBtn">🧷 STICK</button>
+    <button onclick="goBack()">⬅️ BACK</button>
+    <button onclick="alert('FAQ coming soon.')">❓ FAQ</button>
+    <button style="opacity: 0.5;">AWSM</button>
   </div>
 
   <iframe id="videoFrame" allowfullscreen allow="autoplay; encrypted-media"></iframe>
-  <iframe width="0" height="0" src="https://www.youtube.com/embed/2bLJmKq2_Kw?autoplay=1&loop=1&playlist=2bLJmKq2_Kw" frameborder="0" allow="autoplay"></iframe>
   <div id="chiron"></div>
 
   <script>
     let feeds = [];
     let index = 0;
     let isStuck = false;
-    let isPaused = false;
     let player = document.getElementById('videoFrame');
-    let chironLines = [
-      "Row row row your boat",
-      "Gently down the stream",
-      "Merrily merrily merrily merrily",
-      "Life is but a dream"
-    ];
-    let chiron = document.getElementById('chiron');
-    let i = 0;
 
     function rotate() {
-      if (isStuck || isPaused || !feeds.length) return;
+      if (!feeds.length || isStuck) return;
       player.src = feeds[index] + '&autoplay=1';
       index = (index + 1) % feeds.length;
     }
 
+    function startWorldParty() {
+      rotate();
+      setInterval(rotate, 30000);
+    }
+
     function toggleStick() {
       isStuck = !isStuck;
-      alert(isStuck ? 'Feed stuck.' : 'Rotation resumed.');
-      if (!isStuck) rotate();
+      document.getElementById('stickBtn').innerText = isStuck ? '🔄 UNSTICK' : '🧷 STICK';
     }
 
-    function pauseRotation() {
-      isPaused = !isPaused;
-      alert(isPaused ? 'Rotation paused.' : 'Rotation resumed.');
-      if (!isPaused) rotate();
-    }
-
-    function scrollChiron() {
-      chiron.innerText = chironLines[i];
-      i = (i + 1) % chironLines.length;
-    }
-
-    function startWorldParty() {
-      document.getElementById('splash').style.opacity = '0';
-      setTimeout(() => {
-        document.getElementById('splash').style.display = 'none';
-        rotate();
-        setInterval(rotate, 30000);
-        scrollChiron();
-        setInterval(scrollChiron, 8000);
-      }, 1000);
+    function goBack() {
+      index = (index - 2 + feeds.length) % feeds.length;
+      rotate();
     }
 
     fetch('yt_feeds.json')
