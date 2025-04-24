@@ -148,9 +148,10 @@
 
     function rotate() {
       if (!feeds.length || isStuck || !isPlaying) return;
-      const currentFeed = feeds[index];
-      player.src = currentFeed.url + '&autoplay=1';
-      countryDisplay.innerText = currentFeed.country || '';
+      const rawFeed = feeds[index];
+      const feed = typeof rawFeed === 'string' ? { url: rawFeed, country: '' } : rawFeed;
+      player.src = feed.url + '&autoplay=1';
+      countryDisplay.innerText = feed.country || '';
       index = (index + 1) % feeds.length;
     }
 
