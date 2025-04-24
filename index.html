@@ -78,10 +78,11 @@
 
     #chiron {
       position: absolute;
-      bottom: 20px;
+      bottom: 0;
       width: 100%;
-      color: #fff;
-      font-size: 1.2rem;
+      background: rgba(0,0,0,0.7);
+      padding: 0.5rem;
+      font-size: 1rem;
       text-align: center;
       z-index: 9;
     }
@@ -109,13 +110,13 @@
     <button onclick="toggleStick()" id="stickBtn">Wait here!</button>
     <button onclick="goBack()">⬅️ BACK</button>
     <button onclick="alert('FAQ coming soon.')">❓ FAQ</button>
-    <button onclick="showAbout()">ABOUT</button>
-    <button onclick="showContact()">CONTACT</button>
+    <button onclick="toggleAbout()">ABOUT</button>
+    <button onclick="toggleContact()">CONTACT</button>
   </div>
 
   <iframe id="videoFrame" allowfullscreen allow="autoplay; encrypted-media"></iframe>
   <div id="countryName"></div>
-  <div id="chiron"></div>
+  <div id="chiron">AWSM.Travel – Curated global chill, live from Earth 🌍</div>
 
   <div id="about" style="display:none;">
     <strong>AWeSoMe (Around the World in Sixty Minutes)</strong> is a destination of destinations—literally.<br/><br/>
@@ -176,14 +177,16 @@
       rotate();
     }
 
-    function showAbout() {
-      document.getElementById('about').style.display = 'block';
+    function toggleAbout() {
+      const about = document.getElementById('about');
+      about.style.display = about.style.display === 'none' ? 'block' : 'none';
       document.getElementById('contact').style.display = 'none';
     }
 
-    function showContact() {
+    function toggleContact() {
+      const contact = document.getElementById('contact');
+      contact.style.display = contact.style.display === 'none' ? 'block' : 'none';
       document.getElementById('about').style.display = 'none';
-      document.getElementById('contact').style.display = 'block';
     }
 
     player.onerror = function () {
@@ -202,7 +205,10 @@
     window.onload = () => {
       setTimeout(() => {
         document.getElementById('splashScreen').style.display = 'none';
-        togglePlayPause();
+        isPlaying = true;
+        playPauseBtn.innerText = '⏸ PAUSE';
+        rotate();
+        window.awsmtRotationInterval = setInterval(rotate, 30000);
       }, 4000);
     };
   </script>
