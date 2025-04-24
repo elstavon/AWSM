@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AWSM.Travel – Updated Menu Layout</title>
+  <title>AWSM.Travel</title>
   <style>
     body, html {
       margin: 0;
       padding: 0;
       height: 100%;
-      font-family: monospace;
+      font-family: 'Segoe UI', sans-serif;
       background: #000;
       overflow: hidden;
-      color: #0f0;
+      color: #fff;
     }
 
     #leftMenu {
@@ -29,16 +29,16 @@
     #leftMenu button {
       padding: 0.6rem 1.2rem;
       font-size: 1rem;
-      background: rgba(0,0,0,0.6);
-      color: #0f0;
-      border: 1px solid #0f0;
-      border-radius: 10px;
+      background: #ff6f61;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
       cursor: pointer;
       transition: all 0.2s ease;
     }
 
     #leftMenu button:hover {
-      background-color: rgba(0, 255, 0, 0.2);
+      background-color: #ff5a4d;
     }
 
     #videoFrame {
@@ -51,31 +51,91 @@
       position: absolute;
       bottom: 20px;
       width: 100%;
-      color: #0f0;
+      color: #fff;
       font-size: 1.2rem;
       text-align: center;
       z-index: 9;
     }
+
+    #about, #contact {
+      position: absolute;
+      right: 20px;
+      bottom: 20px;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 1rem;
+      border-radius: 10px;
+      color: #fff;
+      max-width: 300px;
+      font-size: 0.9rem;
+    }
+
+    #awsmt-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .awsmt-btn {
+      background-color: #ff6f61;
+      color: #fff;
+      border: none;
+      padding: 0.6rem 1rem;
+      font-size: 1rem;
+      font-weight: bold;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background-color 0.2s ease, transform 0.1s ease;
+    }
+
+    .awsmt-btn:hover {
+      background-color: #ff5a4d;
+      transform: scale(1.05);
+    }
+
+    .awsmt-btn:active {
+      transform: scale(0.95);
+    }
   </style>
 </head>
 <body>
-
   <div id="leftMenu">
     <button onclick="startWorldParty()">▶ START</button>
-    <button onclick="toggleStick()" id="stickBtn">🧷 STICK</button>
+    <button onclick="toggleStick()" id="stickBtn">Wait here!</button>
     <button onclick="goBack()">⬅️ BACK</button>
     <button onclick="alert('FAQ coming soon.')">❓ FAQ</button>
-    <button style="opacity: 0.5;">AWSM</button>
+    <button onclick="showAbout()">ABOUT</button>
+    <button onclick="showContact()">CONTACT</button>
   </div>
 
   <iframe id="videoFrame" allowfullscreen allow="autoplay; encrypted-media"></iframe>
   <div id="chiron"></div>
 
+  <div id="about" style="display:none;">
+    <strong>AWeSoMe (Around the World in Sixty Minutes)</strong> is a destination of destinations—literally.<br/><br/>
+    We built this because sometimes watching traffic out your window just isn't enough, especially when you're musing on life’s next big decision.<br/><br/>
+    - We curate streams to avoid the dreaded “video not found”<br/>
+    - We seek the best, most visually compelling live feeds<br/>
+    - Royalty-free music adds an extra layer of chill<br/>
+    - Prizes for messages delivered LIVE at select destinations – stay tuned!<br/>
+    - Like what you see? We’ll help you dream, plan, or even *go* there.
+  </div>
+
+  <div id="contact" style="display:none;">
+    <form name="contact" method="POST" data-netlify="true">
+      <input type="hidden" name="form-name" value="contact">
+      <p><input type="text" name="name" placeholder="Your Name" required></p>
+      <p><input type="email" name="email" placeholder="Your Email" required></p>
+      <p><textarea name="message" placeholder="Your Message" required></textarea></p>
+      <p><button type="submit">Send</button></p>
+    </form>
+  </div>
+
   <script>
     let feeds = [];
     let index = 0;
     let isStuck = false;
-    let player = document.getElementById('videoFrame');
+    const player = document.getElementById('videoFrame');
 
     function rotate() {
       if (!feeds.length || isStuck) return;
@@ -85,17 +145,27 @@
 
     function startWorldParty() {
       rotate();
-      setInterval(rotate, 30000);
+      window.awsmtRotationInterval = setInterval(rotate, 30000);
     }
 
     function toggleStick() {
       isStuck = !isStuck;
-      document.getElementById('stickBtn').innerText = isStuck ? '🔄 UNSTICK' : '🧷 STICK';
+      document.getElementById('stickBtn').innerText = isStuck ? 'Move on' : 'Wait here!';
     }
 
     function goBack() {
       index = (index - 2 + feeds.length) % feeds.length;
       rotate();
+    }
+
+    function showAbout() {
+      document.getElementById('about').style.display = 'block';
+      document.getElementById('contact').style.display = 'none';
+    }
+
+    function showContact() {
+      document.getElementById('about').style.display = 'none';
+      document.getElementById('contact').style.display = 'block';
     }
 
     fetch('yt_feeds.json')
