@@ -65,6 +65,17 @@
       border: none;
     }
 
+    #countryName {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(0,0,0,0.5);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      z-index: 10;
+    }
+
     #chiron {
       position: absolute;
       bottom: 20px;
@@ -86,34 +97,6 @@
       max-width: 300px;
       font-size: 0.9rem;
     }
-
-    #awsmt-buttons {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      margin-top: 1rem;
-    }
-
-    .awsmt-btn {
-      background-color: #ff6f61;
-      color: #fff;
-      border: none;
-      padding: 0.6rem 1rem;
-      font-size: 1rem;
-      font-weight: bold;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: background-color 0.2s ease, transform 0.1s ease;
-    }
-
-    .awsmt-btn:hover {
-      background-color: #ff5a4d;
-      transform: scale(1.05);
-    }
-
-    .awsmt-btn:active {
-      transform: scale(0.95);
-    }
   </style>
 </head>
 <body>
@@ -131,6 +114,7 @@
   </div>
 
   <iframe id="videoFrame" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+  <div id="countryName"></div>
   <div id="chiron"></div>
 
   <div id="about" style="display:none;">
@@ -160,10 +144,13 @@
     let isPlaying = false;
     const player = document.getElementById('videoFrame');
     const playPauseBtn = document.getElementById('playPauseBtn');
+    const countryDisplay = document.getElementById('countryName');
 
     function rotate() {
       if (!feeds.length || isStuck || !isPlaying) return;
-      player.src = feeds[index] + '&autoplay=1';
+      const currentFeed = feeds[index];
+      player.src = currentFeed.url + '&autoplay=1';
+      countryDisplay.innerText = currentFeed.country || '';
       index = (index + 1) % feeds.length;
     }
 
@@ -198,6 +185,11 @@
       document.getElementById('contact').style.display = 'block';
     }
 
+    player.onerror = function () {
+      console.warn('Stream failed. Skipping...');
+      rotate();
+    };
+
     fetch('yt_feeds.json')
       .then(res => res.json())
       .then(data => {
@@ -210,7 +202,7 @@
       setTimeout(() => {
         document.getElementById('splashScreen').style.display = 'none';
         togglePlayPause();
-      }, 4000); // 4 seconds splash
+      }, 4000);
     };
   </script>
 </body>
